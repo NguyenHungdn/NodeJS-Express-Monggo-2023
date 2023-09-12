@@ -1,9 +1,52 @@
+import { print, consoleStyles } from '../helpers/print.js'
+import { User } from '../models/index.js'
+import Exception from '../exceptions/Exception.js'
+import bcrypt from 'bcrypt'
 const login = async ({ email, password }) => {
-  console.log('login user in repository,haha')
+  let existingUser = await User.findOne({ email }).exec()
+  if (existingUser) {
+    let isMatch = await bcrypt.compare(password, existingUser.password)
+    if (!!isMatch) {
+      //create Java web toker
+    } else {
+      throw new Exception(Exception.WRONG_EMAIL_AND_PASSWORD)
+    }
+  } else {
+    throw new Exception(Exception.WRONG_EMAIL_AND_PASSWORD)
+  }
+  print('login user in repository', consoleStyles.information)
 }
 const register = async ({ email, password, name, phoneNumber, address }) => {
+  let existingUser = await User.findOne({ email }).exec()
+  if (!!existingUser) {
+    throw new Exception(Exception.USER_EXIST)
+  }
+  //encrypt password ,use bcrypt
+  //used for login purpose
+  // const isMatched = await bcrypt.compare(password, existingUser.password)
+  // if (isMatched) {
+  // }
+  const hashedPassword = await bcrypt.hash(
+    password,
+    parseInt(process.env.SALT_ROUNDS)
+  )
+  //insert to db
+
+  const newUser = await User.create({
+    name,
+    email,
+    password: hashedPassword,
+    phoneNumber,
+    address
+  })
+  return {
+    ...newUser._doc,
+    password: 'Not Show'
+  }
+  // print(    `register with ${email} ++ ${name}++${phoneNumber} ++${address}`,
+  //   consoleStyles.success
+  // )
   //validation already done
-  console.log(`register with ${email}${name}${phoneNumber}${address}`)
 }
 export default {
   login,

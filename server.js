@@ -1,4 +1,6 @@
 import express from 'express'
+import chalk from 'chalk'
+
 import * as dotenv from 'dotenv'
 dotenv.config()
 
@@ -16,5 +18,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, async (req, res) => {
-  console.log(`Server is running on ${port}`)
+  console.log(chalk.blue(`Server is running on ${port}`))
 })

@@ -1,27 +1,13 @@
 import chalk from 'chalk'
-class OutputType {
-  static INFORMATION = 'INFORMATION'
-  static SUCCESS = 'SUCCESS'
-  static WARNING = 'WARNING'
-  static ERROR = 'ERROR'
+const consoleStyles = {
+  error: chalk.red,
+  warning: chalk.yellow,
+  success: chalk.green,
+  default: chalk.white,
+  information: chalk.white
 }
-const print = (message, outputType) => {
-  switch (outputType) {
-    case outputType.INFORMATION:
-      console.log(chalk.white(message))
-      break
-    case outputType.SUCCESS:
-      console.log(chalk.green(message))
-      break
-    case outputType.WARNING:
-      console.log(chalk.yellow(message))
-      break
-    case outputType.ERROR:
-      console.log(chalk.red(message))
-      break
+const print = (message, style) => {
+  console.log(style(message))
+}
 
-    default:
-      console.log(chalk.white(message))
-  }
-}
-export { OutputType, print }
+export { print, consoleStyles }
