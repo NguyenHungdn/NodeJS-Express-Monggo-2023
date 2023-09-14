@@ -2,12 +2,28 @@ import { print, consoleStyles } from '../helpers/print.js'
 import { User } from '../models/index.js'
 import Exception from '../exceptions/Exception.js'
 import bcrypt from 'bcrypt'
+import Jwt from 'jsonwebtoken'
 const login = async ({ email, password }) => {
   let existingUser = await User.findOne({ email }).exec()
   if (existingUser) {
     let isMatch = await bcrypt.compare(password, existingUser.password)
     if (!!isMatch) {
-      //create Java web toker
+      //create Json web toker
+      let token = Jwt.sign(
+        {
+          data: existingUser
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: '30 days'
+        }
+      )
+      //clone ad add more properties
+      return {
+        ...existingUser.toObject(),
+        password: 'not show',
+        token: token
+      }
     } else {
       throw new Exception(Exception.WRONG_EMAIL_AND_PASSWORD)
     }

@@ -1,4 +1,5 @@
 import HttpStatusCode from '../exceptions/HttpStatusCode.js'
+import { studentRepository } from '../repositories/index.js'
 const getAllStudents = async (req, res) => {
   res.status(HttpStatusCode.OK).json({
     message: 'All students',
@@ -12,5 +13,17 @@ const getAllStudents = async (req, res) => {
 }
 const getStudentById = async (req, res) => {}
 const updateStudent = async (req, res) => {}
-const insertStudent = async (req, res) => {}
+const insertStudent = async (req, res) => {
+  try {
+    const student = await studentRepository.insertStudent(req.body)
+    res.status(HttpStatusCode.INSERT_OK).json({
+      message: 'Insert Student successfully',
+      data: student
+    })
+  } catch (exception) {
+    res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+      message: 'Cannot insert student:' + error
+    })
+  }
+}
 export default { getAllStudents, getStudentById, updateStudent, insertStudent }

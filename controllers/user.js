@@ -1,16 +1,15 @@
 import { validationResult } from 'express-validator'
 import { userRepository } from '../repositories/index.js'
-import { json } from 'express'
+// import { json } from 'express'
 import { EventEmitter } from 'node:events'
 import Exception from '../exceptions/Exception.js'
 import HttpStatusCode from '../exceptions/HttpStatusCode.js'
-const myEvent = new EventEmitter()
-myEvent.on('event.register.user', (param) => {
-  console.log(`they talked about : ${JSON.stringify(param)}`)
-})
+
 //---------LOGIN------------
 const login = async (req, res) => {
+  // bắt lỗi từ validation
   const errors = validationResult(req)
+  //nếu  có lỗi
   if (!errors.isEmpty()) {
     console.log(errors.array())
     return res
@@ -23,19 +22,27 @@ const login = async (req, res) => {
   //Call repository
 
   try {
-    await userRepository.login({ email, password })
+    // nhậN User tồn tại từ repository.login
+    let existingUser = await userRepository.login({ email, password })
+    console.log(existingUser)
+    // bắn stt thành công
     res.status(HttpStatusCode.OK).json({
-      message: 'login user successfully',
-      data: 'detail user here'
+      message: 'login user successfully control',
+      data: existingUser
     })
   } catch (exceptions) {
+    //nếu lỗi bắn status error
     res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
       message: exceptions.toString()
     })
   }
 }
-
 //--------------REGister
+
+const myEvent = new EventEmitter()
+myEvent.on('event.register.user', (param) => {
+  console.log(`they talked about : ${JSON.stringify(param)}`)
+})
 const register = async (req, res) => {
   const { email, password, name, phoneNumber, address } = req.body
   //Event - Emitter

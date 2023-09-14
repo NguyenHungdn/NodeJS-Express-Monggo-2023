@@ -14,7 +14,7 @@ const connect = async () => {
     return connection
   } catch (error) {
     const { code } = error
-    debugger
+
     if (error.code == 8000) {
       throw new Exception('Wrong database username and password')
     } else if (code == 'ENOTFOUND') {
