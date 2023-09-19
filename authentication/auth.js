@@ -19,7 +19,7 @@ export default function checkToken(req, res, next) {
     const jwtObject = jwt.verify(token, process.env.JWT_SECRET)
     const isExpired = Date.now() >= jwtObject.exp * 1000
     if (isExpired) {
-      jwt.result(HttpStatusCode.BAD_REQUEST).json({
+      jwt.status(HttpStatusCode.BAD_REQUEST).json({
         message: 'Token is expired'
       })
       res.end()
@@ -27,8 +27,8 @@ export default function checkToken(req, res, next) {
       next()
     }
   } catch (exception) {
-    res.result(HttpStatusCode.BAD_REQUEST).json({
-      message: error.message
+    res.status(HttpStatusCode.BAD_REQUEST).json({
+      message: exception.message
     })
   }
   debugger

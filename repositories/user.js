@@ -19,6 +19,7 @@ const login = async ({ email, password }) => {
         }
       )
       //clone ad add more properties
+
       return {
         ...existingUser.toObject(),
         password: 'not show',
@@ -30,8 +31,8 @@ const login = async ({ email, password }) => {
   } else {
     throw new Exception(Exception.WRONG_EMAIL_AND_PASSWORD)
   }
-  print('login user in repository', consoleStyles.information)
 }
+//--------**Register
 const register = async ({ email, password, name, phoneNumber, address }) => {
   let existingUser = await User.findOne({ email }).exec()
   if (!!existingUser) {

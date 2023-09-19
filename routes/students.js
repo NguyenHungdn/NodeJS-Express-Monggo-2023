@@ -6,4 +6,6 @@ router.get('/:id', studentController.getStudentById)
 
 router.patch('/', studentController.updateStudent)
 router.post('/', studentController.insertStudent)
+// router.post('/generateFakeStudents', studentController.generateFakeStudents)
+
 export default router
